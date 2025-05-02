@@ -92,7 +92,7 @@ A CIR record is represented in YAML(seen later) format, which is a human-readabl
   - **exploit_db_id**: An optional field that provides a reference to an exploit database entry, if applicable.
   - **poc**: A link to a proof-of-concept (PoC) or exploit code, if available.
   - **observed_in_the_wild**: A boolean value indicating whether the vulnerability has been observed being exploited in the wild.
-  - **threat_actor**: Information about any known threat actors associated with the vulnerability
+  - **threat_actors**: Information about any known threat actors associated with the vulnerability
     - **name**: The name of the threat actor or group.
     - **description**: A brief description of the threat actor, including their motivations and known activities.
     - **tactics**: A list of tactics used by the threat actor, such as initial access, execution, persistence, etc.
@@ -187,13 +187,13 @@ exploit:
   exploit_db_id: 51423
   poc: "https://github.com/example/poc"
   observed_in_the_wild: true
-  threat_actor:
-    name: "APT-XYZ"
-    description: "Known to exploit RCE vulnerabilities in cloud applications."
-    tactics:
-      - initial_access
-      - execution
-      - persistence
+  threat_actors:
+    - name: "APT-XYZ"
+      description: "Known to exploit RCE vulnerabilities in cloud applications."
+      tactics:
+        - initial_access
+        - execution
+        - persistence
 
 attack_surface:
     exposed: true
