@@ -1,8 +1,10 @@
 # CIR
 
+![image](./.github/banner.png)
+
 ## Introduction to CIR (Cyber Issue Record)
 
-### Context
+### 🔖 Context
 
 The cybersecurity ecosystem widely relies on the Common Vulnerabilities and Exposures (CVE) system to track and share information about known security flaws. While CVEs provide a crucial reference point for vulnerability identification, they lack the contextual depth and real-world exploitation data needed for modern risk assessment, threat response, and operational prioritization.
 
@@ -20,7 +22,7 @@ CIR (Cyber Issue Record) is a human-readable, machine-parseable YAML-based forma
 
 By introducing CIR, we aim to create a modern, extensible vulnerability record format that empowers defenders, researchers, and red teams to operate with more nuance, clarity, and shared intelligence.
 
-## CIR Specification
+## 🧠 CIR Specification
 The CIR specification is designed to be human-readable and machine-parseable, allowing for easy integration into various tools and workflows. Below is a detailed breakdown of the CIR format, including its structure, fields, and examples.
 
 ### Structure
@@ -30,18 +32,18 @@ A CIR record is represented in YAML(seen later) format, which is a human-readabl
 
 - **id**: A unique identifier for the CIR record, typically in the format `CIR-YYYY-PC-NNNN`, where `YYYY` is the year and `NNNN` is a sequential number and `PC` is the project code.
 
-| Élément       | Exemple     | Description                                                 |
-|---------------|-------------|-------------------------------------------------------------|
-| `CIR`         | —           | Préfixe constant pour tout enregistrement                  |
-| `YEAR`        | `2025`      | Année de publication ou découverte                         |
-| `PROJECTCODE` | `00`, `P01`, `INT`, etc. | `00` pour les CIR publics, autre pour interne/projet |
-| `UNIQUEID`    | `0001`, `9864`, etc. | Identifiant local ou incrémental, unique |
+| Element        | Example         | Description                                                            |
+|----------------|------------------|------------------------------------------------------------------------|
+| `CIR`          | —                | Constant prefix for all records                                       |
+| `YEAR`         | `2025`           | Year of disclosure or discovery                                       |
+| `PROJECTCODE`  | `00`, `P01`, `INT`, etc. | `00` indicates a public CIR, other codes for internal or project-specific records |
+| `UNIQUEID`     | `0001`, `9864`, etc. | Local or incremental identifier, must be unique                      |
 
-| CIR ID               | Contexte                                      |
-|----------------------|-----------------------------------------------|
-| `CIR-2025-00-0003`   | CIR public #3 de 2025                         |
-| `CIR-2025-SNOW-0007` | CIR interne de l'équipe Sn0wAlice             |
-| `CIR-2025-LAB-1092`  | CIR pour un projet client ou produit LAB      |
+| CIR ID                 | Context                                              |
+|------------------------|------------------------------------------------------|
+| `CIR-2025-00-0003`     | Public CIR #3 from the year 2025                     |
+| `CIR-2025-SNOW-0007`   | Internal CIR from the Sn0wAlice team                 |
+| `CIR-2025-LAB-1092`    | CIR related to a "LAB" product or client project     |
 
 ---
 
