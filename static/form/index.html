@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Formulaire CIR</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+            background-color: #f5f5f5;
+        }
+
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 900px;
+            margin: auto;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-section {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .dynamic-group {
+            margin-top: 10px;
+            border: 1px dashed #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #fefefe;
+        }
+
+        .remove-btn {
+            background-color: #dc3545;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <form id="cirForm">
+        <h2>Créer un enregistrement CIR</h2>
+        <div class="form-section">
+            <label for="id">ID</label>
+            <input type="text" id="id" name="id" placeholder="ex: CIR-2024-00-0001">
+            <label for="alias">Alias</label>
+            <input type="text" id="alias" name="alias">
+            <label for="title">Titre</label>
+            <input type="text" id="title" name="title">
+            <label for="published">Date de publication</label>
+            <input type="date" id="published" name="published">
+            <label for="last_updated">Dernière mise à jour</label>
+            <input type="date" id="last_updated" name="last_updated">
+        </div>
+
+        <div class="form-section">
+            <h3>Auteurs</h3>
+            <div id="authors"></div>
+            <button type="button" onclick="addAuthor()">+ Ajouter un auteur</button>
+        </div>
+
+        <div class="form-section">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="4"></textarea>
+        </div>
+
+
+        <div class="form-section">
+            <label for="product_name">Produit</label>
+            <input type="text" id="product_name" placeholder="Nom du produit">
+            <label for="product_versions">Versions (séparées par des virgules)</label>
+            <input type="text" id="product_versions">
+            <label for="vendor">Fournisseur</label>
+            <input type="text" id="vendor">
+        </div>
+
+        <div class="form-section">
+            <h3>Severity</h3>
+
+            <h4>Technical</h4>
+            <label>CVSS Base Score</label>
+            <input type="number" step="0.1" id="cvss_base_score">
+            <label>CVSS Vector</label>
+            <input type="text" id="cvss_vector">
+            <label>Exploitability Score</label>
+            <input type="number" step="0.1" id="exploitability_score">
+            <label>Impact Score</label>
+            <input type="number" step="0.1" id="impact_score">
+            <label>Priority Score</label>
+            <input type="number" step="0.1" id="priority_score">
+
+            <h4>Exposure</h4>
+            <label>Exposition Internet</label>
+            <select id="internet_exposed">
+                <option value="true">Oui</option>
+                <option value="false">Non</option>
+            </select>
+            <label>Authentification requise</label>
+            <select id="auth_required">
+                <option value="true">Oui</option>
+                <option value="false">Non</option>
+            </select>
+            <label>Mouvement latéral possible</label>
+            <select id="lateral_movement">
+                <option value="true">Oui</option>
+                <option value="false">Non</option>
+            </select>
+
+            <h4>Detection</h4>
+            <label>Détectable</label>
+            <select id="can_be_detected">
+                <option value="true">Oui</option>
+                <option value="false">Non</option>
+            </select>
+            <div id="detectionToolsContainer"></div>
+            <button type="button" onclick="addDetectionTool()">+ Ajouter un outil</button>
+
+            <h4>Business Impact</h4>
+            <label>Actif critique affecté</label>
+            <select id="critical_asset_affected">
+                <option value="true">Oui</option>
+                <option value="false">Non</option>
+            </select>
+            <label>Perte potentielle de données</label>
+            <select id="potential_data_loss">
+                <option value="true">Oui</option>
+                <option value="false">Non</option>
+            </select>
+            <label>Risque d'indisponibilité</label>
+            <input type="text" id="downtime_risk">
+
+            <h4>Final Score</h4>
+            <label>Score final</label>
+            <input type="text" id="final_score">
+            <label>Niveau de risque</label>
+            <input type="text" id="risk_level">
+            <label>Notes de l'analyste</label>
+            <textarea id="analyst_notes" rows="3"></textarea>
+        </div>
+
+        <div class="form-section">
+            <h3>Exploit</h3>
+
+            <label>Exploit connu</label>
+            <select id="exploit_known">
+                <option value="true">Oui</option>
+                <option value="false">Non</option>
+            </select>
+
+            <label>Exploit DB ID</label>
+            <input type="text" id="exploit_db_id" />
+
+            <label>Proof of Concept (URL)</label>
+            <input type="url" id="exploit_poc" />
+
+            <label>Observé dans la nature</label>
+            <select id="exploit_observed">
+                <option value="true">Oui</option>
+                <option value="false">Non</option>
+            </select>
+
+            <h4>Threat Actors</h4>
+            <div id="threatActorsContainer"></div>
+            <button type="button" onclick="addThreatActor()">+ Ajouter un acteur</button>
+        </div>
+
+        <div class="form-section">
+            <h3>Attack Surface</h3>
+
+            <label>Exposé à Internet</label>
+            <select id="attack_exposed">
+                <option value="true">Oui</option>
+                <option value="false">Non</option>
+            </select>
+
+            <h4>Vecteurs d'attaque</h4>
+            <div id="attackVectorsContainer"></div>
+            <button type="button" onclick="addAttackVector()">+ Ajouter un vecteur</button>
+
+            <h4>Composants affectés</h4>
+            <div id="componentsContainer"></div>
+            <button type="button" onclick="addComponent()">+ Ajouter un composant</button>
+
+            <label for="impact">Impact technique</label>
+            <textarea id="impact" rows="3"></textarea>
+
+            <label for="business_impact">Impact métier</label>
+            <textarea id="business_impact" rows="3"></textarea>
+        </div>
+
+        <div class="form-section">
+            <h3>Mitigations</h3>
+            <div id="mitigationsContainer"></div>
+            <button type="button" onclick="addMitigation()">+ Ajouter une mitigation</button>
+        </div>
+
+        <div class="form-section">
+            <h3>Related</h3>
+
+            <div>
+                <h4>MITRE ATT&CK</h4>
+                <div id="mitreContainer"></div>
+                <button type="button" onclick="addMitre()">+ Ajouter un MITRE ID</button>
+            </div>
+
+            <div style="margin-top:20px;">
+                <h4>CWE</h4>
+                <div id="cweContainer"></div>
+                <button type="button" onclick="addCWE()">+ Ajouter un CWE ID</button>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>Tags</h3>
+            <div id="tagsContainer"></div>
+            <button type="button" onclick="addTag()">+ Ajouter un tag</button>
+        </div>
+
+        <button type="submit">Générer YAML</button>
+        <textarea id="yamlOutput" rows="30" style="margin-top:20px;width:100%;"></textarea>
+    </form>
+
+    <script>
+        // AUTHORS
+        let authorIndex = 0;
+
+        function addAuthor() {
+            const container = document.getElementById('authors');
+            const div = document.createElement('div');
+            div.className = 'dynamic-group';
+            div.innerHTML = `
+        <label>Nom</label>
+        <input type="text" name="author_name_${authorIndex}" />
+        <label>Email</label>
+        <input type="email" name="author_email_${authorIndex}" />
+        <button type="button" class="remove-btn" onclick="this.parentNode.remove()">Supprimer</button>
+      `;
+            container.appendChild(div);
+            authorIndex++;
+        }
+
+        // ATTACK VECTORS
+        let attackVectorIndex = 0;
+        let componentIndex = 0;
+
+        function addAttackVector() {
+            const container = document.getElementById('attackVectorsContainer');
+            const div = document.createElement('div');
+            div.className = 'dynamic-group';
+            div.innerHTML = `
+    <input type="text" name="attack_vector_${attackVectorIndex}" />
+    <button type="button" class="remove-btn" onclick="this.parentNode.remove()">Supprimer</button>
+  `;
+            container.appendChild(div);
+            attackVectorIndex++;
+        }
+
+        function addComponent() {
+            const container = document.getElementById('componentsContainer');
+            const div = document.createElement('div');
+            div.className = 'dynamic-group';
+            div.innerHTML = `
+    <input type="text" name="component_${componentIndex}" />
+    <button type="button" class="remove-btn" onclick="this.parentNode.remove()">Supprimer</button>
+  `;
+            container.appendChild(div);
+            componentIndex++;
+        }
+
+        // MITIGATIONS
+        let mitigationIndex = 0;
+
+        function addMitigation() {
+            const container = document.getElementById('mitigationsContainer');
+            const div = document.createElement('div');
+            div.className = 'dynamic-group';
+            div.innerHTML = `
+    <label>Type</label>
+    <input type="text" name="mitigation_type_${mitigationIndex}" />
+    <label>Description</label>
+    <input type="text" name="mitigation_description_${mitigationIndex}" />
+    <label>Status</label>
+    <input type="text" name="mitigation_status_${mitigationIndex}" />
+    <label>Date</label>
+    <input type="date" name="mitigation_date_${mitigationIndex}" />
+    <button type="button" class="remove-btn" onclick="this.parentNode.remove()">Supprimer</button>
+  `;
+            container.appendChild(div);
+            mitigationIndex++;
+        }
+
+        // RELATED 
+        let mitreIndex = 0;
+        let cweIndex = 0;
+
+        function addMitre() {
+            const container = document.getElementById('mitreContainer');
+            const div = document.createElement('div');
+            div.className = 'dynamic-group';
+            div.innerHTML = `
+    <label>ID MITRE</label>
+    <input type="text" name="mitre_${mitreIndex}" />
+    <button type="button" class="remove-btn" onclick="this.parentNode.remove()">Supprimer</button>
+  `;
+            container.appendChild(div);
+            mitreIndex++;
+        }
+
+        function addCWE() {
+            const container = document.getElementById('cweContainer');
+            const div = document.createElement('div');
+            div.className = 'dynamic-group';
+            div.innerHTML = `
+    <label>ID CWE</label>
+    <input type="text" name="cwe_${cweIndex}" />
+    <button type="button" class="remove-btn" onclick="this.parentNode.remove()">Supprimer</button>
+  `;
+            container.appendChild(div);
+            cweIndex++;
+        }
+
+
+        // TAGS
+        let tagIndex = 0;
+
+        function addTag() {
+            const container = document.getElementById('tagsContainer');
+            const div = document.createElement('div');
+            div.className = 'dynamic-group';
+            div.innerHTML = `
+                <label>Tag</label>
+                <input type="text" name="tag_${tagIndex}" />
+                <button type="button" class="remove-btn" onclick="this.parentNode.remove()">Supprimer</button>
+            `;
+            container.appendChild(div);
+            tagIndex++;
+        }
+
+        // THREAT ACTORS
+        let threatActorIndex = 0;
+
+        function addThreatActor() {
+            const container = document.getElementById('threatActorsContainer');
+            const div = document.createElement('div');
+            div.className = 'dynamic-group';
+            div.innerHTML = `
+    <label>Nom</label>
+    <input type="text" name="actor_name_${threatActorIndex}" />
+    <label>Description</label>
+    <input type="text" name="actor_desc_${threatActorIndex}" />
+    <div>
+      <label>Tactiques</label>
+      <div class="tacticsContainer" id="tactics_${threatActorIndex}"></div>
+      <button type="button" onclick="addTactic(${threatActorIndex})">+ Ajouter une tactique</button>
+    </div>
+    <button type="button" class="remove-btn" onclick="this.parentNode.remove()">Supprimer l'acteur</button>
+  `;
+            container.appendChild(div);
+            threatActorIndex++;
+        }
+
+        function addTactic(index) {
+            const container = document.getElementById(`tactics_${index}`);
+            const div = document.createElement('div');
+            div.className = 'dynamic-group';
+            div.innerHTML = `
+    <input type="text" name="tactic_${index}" />
+    <button type="button" class="remove-btn" onclick="this.parentNode.remove()">Supprimer</button>
+  `;
+            container.appendChild(div);
+        }
+
+        // DETECTION TOOLS
+        let detectionToolIndex = 0;
+
+        function addDetectionTool() {
+            const container = document.getElementById('detectionToolsContainer');
+            const div = document.createElement('div');
+            div.className = 'dynamic-group';
+            div.innerHTML = `
+    <input type="text" name="detection_tool_${detectionToolIndex}" />
+    <button type="button" class="remove-btn" onclick="this.parentNode.remove()">Supprimer</button>
+  `;
+            container.appendChild(div);
+            detectionToolIndex++;
+        }
+
+
+        // GENERATE FINAL YAML
+
+        document.getElementById('cirForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            let yaml = '';
+
+            function val(id) {
+                return document.getElementById(id)?.value || '';
+            }
+
+            yaml += `version: 1.0\n\n`;
+            yaml += `id: ${val('id')}\n`;
+            yaml += `alias: ${val('alias')}\n`;
+            yaml += `title: ${val('title')}\n`;
+            yaml += `published: ${val('published')}\n`;
+            yaml += `last_updated: ${val('last_updated')}\n`;
+            yaml += `authors:\n`;
+            document.querySelectorAll('#authors .dynamic-group').forEach(group => {
+                const name = group.querySelector('input[name^="author_name_"]').value;
+                const email = group.querySelector('input[name^="author_email_"]').value;
+                yaml += `  - name: \"${name}\"\n    email: \"${email}\"\n`;
+            });
+
+            yaml += `\ndescription: >\n  ${val('description')}\n\n`;
+            yaml += `product:\n`;
+            yaml += `  name: ${val('product_name')}\n`;
+            yaml +=
+                `  version: [${val('product_versions').split(',').map(v => `\"${v.trim()}\"`).join(', ')}]\n`;
+            yaml += `  vendor: ${val('vendor')}\n`;
+
+            yaml += `\n\nseverity:\n`;
+            yaml += `  technical:\n`;
+            yaml += `    cvss_base_score: ${document.getElementById('cvss_base_score').value}\n`;
+            yaml += `    cvss_vector: "${document.getElementById('cvss_vector').value}"\n`;
+            yaml += `    exploitability_score: ${document.getElementById('exploitability_score').value}\n`;
+            yaml += `    impact_score: ${document.getElementById('impact_score').value}\n`;
+            yaml += `    priority_score: ${document.getElementById('priority_score').value}\n`;
+
+            yaml += `  exposure:\n`;
+            yaml += `    internet_exposed: ${document.getElementById('internet_exposed').value === 'true'}\n`;
+            yaml += `    auth_required: ${document.getElementById('auth_required').value === 'true'}\n`;
+            yaml +=
+                `    lateral_movement_possible: ${document.getElementById('lateral_movement').value === 'true'}\n`;
+
+            yaml += `  detection:\n`;
+            yaml += `    can_be_detected: ${document.getElementById('can_be_detected').value === 'true'}\n`;
+            yaml += `    detection_tools:\n`;
+            document.querySelectorAll('#detectionToolsContainer .dynamic-group input').forEach(input => {
+                const val = input.value.trim();
+                if (val) yaml += `      - ${val}\n`;
+            });
+
+            yaml += `  business_impact:\n`;
+            yaml +=
+                `    critical_asset_affected: ${document.getElementById('critical_asset_affected').value === 'true'}\n`;
+            yaml +=
+                `    potential_data_loss: ${document.getElementById('potential_data_loss').value === 'true'}\n`;
+            yaml += `    downtime_risk: ${document.getElementById('downtime_risk').value}\n`;
+
+            yaml += `  final_score:\n`;
+            yaml += `    score: "${document.getElementById('final_score').value}"\n`;
+            yaml += `    risk_level: ${document.getElementById('risk_level').value}\n`;
+            yaml += `    analyst_notes: "${document.getElementById('analyst_notes').value}"\n`;
+
+            yaml += `\n\nexploit:\n`;
+            yaml += `  known: ${document.getElementById('exploit_known').value === 'true'}\n`;
+            yaml += `  exploit_db_id: ${document.getElementById('exploit_db_id').value.trim()}\n`;
+            yaml += `  poc: "${document.getElementById('exploit_poc').value.trim()}"\n`;
+            yaml += `  observed_in_the_wild: ${document.getElementById('exploit_observed').value === 'true'}\n`;
+
+            const actorGroups = document.querySelectorAll('#threatActorsContainer .dynamic-group');
+            if (actorGroups.length > 0) {
+                yaml += `  threat_actors:\n`;
+                actorGroups.forEach(group => {
+                    const name = group.querySelector('[name^="actor_name_"]').value.trim();
+                    const desc = group.querySelector('[name^="actor_desc_"]').value.trim();
+                    yaml += `    - name: "${name}"\n`;
+                    yaml += `      description: "${desc}"\n`;
+
+                    const tactics = group.querySelectorAll('.tacticsContainer input');
+                    if (tactics.length > 0) {
+                        yaml += `      tactics:\n`;
+                        tactics.forEach(input => {
+                            const val = input.value.trim();
+                            if (val) yaml += `        - ${val}\n`;
+                        });
+                    }
+                });
+            }
+
+
+
+            yaml += `\n\nattack_surface:\n`;
+            yaml += `  exposed: ${document.getElementById('attack_exposed').value === 'true'}\n`;
+
+            yaml += `  attack_vector:\n`;
+            document.querySelectorAll('#attackVectorsContainer .dynamic-group input').forEach(input => {
+                const val = input.value.trim();
+                if (val) {
+                    yaml += `    - ${val}\n`;
+                }
+            });
+
+            yaml += `  affected_components:\n`;
+            document.querySelectorAll('#componentsContainer .dynamic-group input').forEach(input => {
+                const val = input.value.trim();
+                if (val) {
+                    yaml += `    - ${val}\n`;
+                }
+            });
+
+            yaml += `  impact: >\n    ${document.getElementById('impact').value.replace(/\\n/g, '\\n    ')}\n`;
+            yaml +=
+                `  business_impact: >\n    ${document.getElementById('business_impact').value.replace(/\\n/g, '\\n    ')}\n`;
+
+            yaml += `\n\nmitigations:\n`;
+            document.querySelectorAll('#mitigationsContainer .dynamic-group').forEach(group => {
+                const type = group.querySelector('[name^=\"mitigation_type_\"]').value.trim();
+                const description = group.querySelector('[name^=\"mitigation_description_\"]').value
+                    .trim();
+                const status = group.querySelector('[name^=\"mitigation_status_\"]').value.trim();
+                const date = group.querySelector('[name^=\"mitigation_date_\"]').value.trim();
+
+                if (type || description || status || date) {
+                    yaml += `  - type: ${type}\n`;
+                    yaml += `    description: \"${description}\"\n`;
+                    yaml += `    status: ${status}\n`;
+                    yaml += `    date: ${date}\n`;
+                }
+            });
+
+            yaml += `\n\nrelated:\n`;
+
+            yaml += `  mitre_attack:\n`;
+            document.querySelectorAll('#mitreContainer .dynamic-group').forEach(group => {
+                const val = group.querySelector('input').value.trim();
+                if (val) {
+                    yaml += `    - ${val}\n`;
+                }
+            });
+
+            yaml += `  cwe:\n`;
+            document.querySelectorAll('#cweContainer .dynamic-group').forEach(group => {
+                const val = group.querySelector('input').value.trim();
+                if (val) {
+                    yaml += `    - ${val}\n`;
+                }
+            });
+
+
+            yaml += `\n\ntags:\n`;
+            document.querySelectorAll('#tagsContainer .dynamic-group').forEach(group => {
+                const tag = group.querySelector('input').value.trim();
+                if (tag) {
+                    yaml += `  - ${tag}\n`;
+                }
+            });
+
+            document.getElementById('yamlOutput').value = yaml;
+        });
+    </script>
+</body>
+
+</html>
